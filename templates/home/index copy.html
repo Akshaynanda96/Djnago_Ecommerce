@@ -1,0 +1,39 @@
+{% load static %}
+
+{% extends "base/base.html"%}
+
+{% block title %}
+Amazon
+{% endblock %}
+
+{%  block start %}
+
+    <div class="container mt-5 pt-5">
+        <div class="row">
+            {% for i in data %}
+            <div class="col-md-3">
+                <figure class="card card-product-grid">
+                    <div class="img-wrap">
+                        <span class="topbar">
+                            <span class="badge badge-success"> NEW </span>
+                        </span>
+                        <img src="/media/{{i.product_image.first.image}}">
+                    </div>
+                    <figcaption class="info-wrap border-top">
+                        <a href="{% url 'products' i.slugField %}" class="title">{{i.product_Brand}}</a>
+                        <small class="text">{{i.product_decribstion}}</small>
+                            <div class="price-wrap mt-2">
+                                <span class="price">₹{{i.product_price}}</span>
+                                <small class="price-old">₹14.99</small>
+                            </div> <!-- price-wrap.// -->
+                    </figcaption>
+                </figure> <!-- card // -->
+            </div> <!-- col.// -->  
+            {% endfor %}
+        </div>
+        </div>
+      
+    
+
+
+{% endblock %}
