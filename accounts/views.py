@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login , logout ,authenticate 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from cart.models import Carts
 
 def login_page(request):
 
@@ -28,7 +29,7 @@ def login_page(request):
     return render(request , 'accounts/login.html')
 
 
-def logout(request):
+def user_logout(request):
         logout(request)
         return redirect('login')
   
@@ -73,11 +74,12 @@ def email_active(request , email_token):
     
 @login_required(login_url='/accounts/login')
 def profile_D(request):
-
+    cat_count = Carts.objects.filter(user = request.user).count()
     user = request.user
     context = {  
         'state_choices': STATE_CHOICES,
-        "user":user
+        "user":user,
+        'cat_count':cat_count,
     }   
     if request.method == 'POST':
         user = request.user
@@ -110,3 +112,11 @@ def profile_D(request):
 
     return render(request, 'accounts/profile.html', context)
 
+
+
+def contact(request):
+    cat_count = Carts.objects.filter(user = request.user).count()
+    context= {
+        'cat_count':cat_count,
+    }
+    return render(request , 'base/contact.html', context)

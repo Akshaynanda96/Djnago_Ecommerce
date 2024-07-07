@@ -1,9 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render , redirect
 import random
 from datetime import timedelta
 from django.utils import timezone
 from project.models import *
 from cart.models import Carts
+from django.contrib import messages
 
 
 
@@ -28,18 +29,64 @@ def home(request):
             newproducts = recent_products
      
         category = Category.objects.all()
-
+        categoryheader = Category.objects.all()
+        cat_count = Carts.objects.filter(user = request.user).count()
         
-      
+        
         context = {
             "data":products,
             'category':category,
             'newproduct':newproducts,
-            
-   
+            'all_products':all_products,
+            'categoryheader':categoryheader,
+            'cat_count':cat_count,               
         }        
         return render(request , 'home/index.html', context)
     except Exception:
         return render(request , 'base/404.html')
+    
+    
 
+from django.db.models import Q
 
+def search_box(request):
+    if request.method == 'GET':
+        get_obj = request.GET.get('name_search')
+        if get_obj :
+
+            products = Product.objects.filter(
+                Q(product_name__icontains=get_obj) |
+                Q(product_category__category_name__icontains=get_obj) |
+                Q(product_subcategory__subcategory_name__icontains=get_obj) |
+                Q(product_Brand__icontains=get_obj) |
+                Q(product_artical__icontains=get_obj)
+            ).distinct()
+            
+            if products:
+                context = {
+                    'products': products,
+                }
+                return render(request, 'base/shop.html', context)
+            else:
+                return render(request, 'base/404.html')
+        else:
+            messages.info(request, 'Please Enter to Search')
+            return redirect('home')
+    
+    return render(request, 'base/shop.html')  
+
+def Discount(request, slug):
+    try:
+        discount_percentage = int(slug)  # Convert slug to integer
+        products = Product.objects.filter(product_dicount = discount_percentage)
+        context = {
+            'products': products,
+        }
+        return render(request, 'home/discount.html', context)
+    except ValueError:
+        # Handle cases where slug is not a valid integer (optional)
+        return render(request, 'home/error.html', {'message': 'Invalid discount percentage provided.'})
+
+    
+    
+    

@@ -3,6 +3,7 @@ from django.http import HttpResponse
 
 from project.models import *
 from cart.models import *
+from django.db.models import Q
 
 def productsdetails(request, sulg):
  
@@ -10,11 +11,14 @@ def productsdetails(request, sulg):
         category = get_object_or_404(Category, slugField=sulg)
         products = Product.objects.filter(product_category=category)
         subcategories = SubCategory.objects.filter(products__in=products).distinct()
-        
+        cat_count = Carts.objects.filter(user = request.user).count()
+       
         context = {
         'subcat':subcategories,
         "products":products,
-        "category":category
+        "category":category,
+        'cat_count':cat_count,
+       
         }
 
         return render(request, 'productdetails/subcat.html', context)
@@ -25,26 +29,79 @@ def productsdetails(request, sulg):
 
 
 def SubCategory_details(request,sulg):
-
+    cat_count = Carts.objects.filter(user = request.user).count()
     subcategory = get_object_or_404(SubCategory, slugField=sulg)
     products = Product.objects.filter(product_subcategory=subcategory)
+     
     context = {
         'products': products,
+        'cat_count':cat_count,
+       
     }
 
-    return render(request, 'productdetails/subwiseproduct.html', context)
+    return render(request, 'productdetails/subshop.html', context)
 
 
 
 def itemdetails(request , sulg):
-
+    
+    
+    cat_count = Carts.objects.filter(user = request.user).count()
     data = get_object_or_404(Product, slugField=sulg)
+    item_in_cart = False
+    if request.user.is_authenticated:
+        item_in_cart  = Carts.objects.filter(Q(user = request.user), Q(product = data.udid ))
 
     context = {
         'data':data,
+        'item_in_cart':item_in_cart,
+        'cat_count':cat_count,
+   
     }
     
     return render(request, 'productdetails/detail.html', context)
 
+
+def shop( request):
+    products = Product.objects.all()
+    cat_count = Carts.objects.filter(user = request.user).count()
+
+    
+    context = {
+        
+        'products':products,
+        'cat_count':cat_count,
+        
+    }
+    return render(request ,'base/shop.html', context)
+
     
 
+def pricefilter(request ):
+    
+    if request.method == 'GET':
+        getpricerange = request.GET.get('getpricerange')
+       
+        if getpricerange:
+            if getpricerange == '500':
+                products = Product.objects.filter(product_price__gte=0, product_price__lt=500)
+            elif getpricerange == '1000':
+                products = Product.objects.filter(product_price__gte=500, product_price__lt=1000)
+            elif getpricerange == '1500':
+                products = Product.objects.filter(product_price__gte=1000, product_price__lt=1500)
+            elif getpricerange == '1500-2000':
+                products = Product.objects.filter(product_price__gte=1500, product_price__lt=2000)
+            elif getpricerange == '5000':
+                products = Product.objects.filter(product_price__gte=2000, product_price__lt=5000)
+            else:
+                products = Product.objects.all()  
+        else:
+            products = Product.objects.all()  
+    
+
+        
+        context = {
+            'products': products,
+        }
+
+        return render(request, 'productdetails/subshop.html', context)

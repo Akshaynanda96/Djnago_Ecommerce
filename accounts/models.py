@@ -90,4 +90,4 @@ class profileDetails(BaseModole):
     profile_image = models.ImageField(upload_to='profile_picture',blank=True, null=True)
 
     def __str__(self):
-        return self.First_name
+        return f'{self.First_name} {self.Last_name} {self.udid}' 

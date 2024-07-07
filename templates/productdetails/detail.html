@@ -83,12 +83,26 @@ Product Details
                             {% endfor %}
                         </form>
                     </div>
+                    {% if request.user.is_authenticated %}
+                        {% if item_in_cart %}
+                        <a class="btn btn-primary" href="{% url 'my_cart' %}" role="button"> Go to Cart </a>
+                        {% else %}
+                        <div class="d-flex align-items-center mb-4 pt-2">
+                            <form action="{% url 'addcart' %}" method="GET">
+                                <input type="hidden" name="cart_id" value="{{ data.udid }}" id="cart_id">
+                            <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                    {% if not request.user.is_authenticated %}
                     <div class="d-flex align-items-center mb-4 pt-2">
-                        <form action="{% url 'addcart' %}">
-                            <input type="hidden" name="cart_id" , value="{{data.udid}}" , id="cart_id">
+                        <form action="{% url 'addcart' %}" method="GET">
+                            <input type="hidden" name="cart_id" value="{{ data.udid }}" id="cart_id">
                         <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To Cart</button>
                         </form>
                     </div>
+                    {% endif %}
                     <div class="d-flex pt-2">
                         <strong class="text-dark mr-2">Share on:</strong>
                         <div class="d-inline-flex">

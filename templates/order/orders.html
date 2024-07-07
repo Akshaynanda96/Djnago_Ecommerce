@@ -1,0 +1,54 @@
+{% extends "base/base.html"%}
+
+{% load static %}
+
+{% block title %}
+Buy Now
+{% endblock %}
+
+{%  block start %}
+
+<!-- orders.html -->
+<div class="container my-5">
+    <div class="row">
+        <h3>Welcome {{ request.user.first_name| title }}</h3> 
+        <div class="col-sm-2 border-end">
+            <ul class="list-unstyled">
+                <li class="d-grid"><a href="#" class="btn btn-primary">Orders</a></li> 
+            </ul>
+        </div>
+        <div class="col-sm-9 offset-sm-1">
+            <div class="row">
+                {% for order in order_obj %}
+                <div class="col-sm-6">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Order {{ forloop.counter }}</h5>
+                            <p>Product: {{ order.Product.product_name }} - {{ order.Product.product_Brand }} - {{ order.Product.product_artical }}</p>
+                            <p>Quantity: {{ order.qty }}</p>
+                            <p>Status: {{ order.Stats }}</p>
+                
+                            {% if order.Stats == 'Pending' %}
+                            <img class="custom-img" src="/media/orderstatus/pending.png" style="width: 50px; height: auto;">
+                            {% elif order.Stats == 'Delivered' %}
+                            <img class="custom-img" src="/media/orderstatus/Delivery.png" style="width: 50px; height: auto;">
+                            {% elif order.Stats == 'Cancel' %}
+                            <img class="custom-img" src="/media/orderstatus/Cancel.png" style="width: 50px; height: auto;">
+                            {% elif order.Stats == 'Accepted' %}
+                            <img class="custom-img" src="/media/orderstatus/Accepted.png" style="width: 50px; height: auto;">
+                            {% elif order.Stats == 'Packed' %}
+                            <img class="custom-img" src="/media/orderstatus/Packed.png" style="width: 50px; height: auto;">
+                            {% elif order.Stats == 'On the Way' %}
+                            <img class="custom-img" src="/media/orderstatus/On the Way.png" style="width: 50px; height: auto;">
+                            {% endif %}
+                
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock  %}

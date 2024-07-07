@@ -83,60 +83,115 @@
         }
     });
 
+})
 
-//     // Product Quantity
-    $('.quantity button').on('click', function () {
+$(document).ready(function() {
+    $('.btn-plus').click(function() {
         var button = $(this);
-        var oldValue = button.parent().parent().find('input').val();
-        if (button.hasClass('btn-plus')) {
-            var newVal = parseFloat(oldValue) + 1;
-        } else {
-            if (oldValue > 1) {
-                var newVal = parseFloat(oldValue) - 1;
-            } else {
-                newVal = 0;
+        var uuid = button.data('uuid');
+        console.log(uuid);
+        var quantityInput = $('.quantity-input');
+        $.ajax({
+            type:'GET',
+            url: '/increment_quantity',
+            data:{
+                prod_id : uuid,  
+            },
+            success: function (data) {
+                console.log(data);
+                quantityInput.val(data.qty);
+                $('#totalAmt').text('₹' + data.totalAmt.toFixed(2));
+                $('#Subtotal').text('₹' + data.Subtotal.toFixed(2));
+                $('#finalamount').text('₹' + data.finalAmount.toFixed(2));
+                
+     
             }
-        }
-        button.parent().parent().find('input').val(newVal);
+        })
+        
     });
-    
-})(jQuery);
+});
 
-// -----------------cart------------------
-    $(document).ready(function(){
-        $('.btn-plus').click(function(){
-            var uuid = $(this).data('uuid');
-            console.log(uuid);
-            
-            $.ajax({
-                type: "GET",
-                url: "/pluscart",
-                data: {
-                    pro_id: uuid
-                },
-                success: function(data) {
-                   
-                    var qty = data.qty;
-                    var subtotal = data.Subtotal;
-                    var finalAmount = data.finalAmount;
-                    var totalAmt = data.totalAmt;
 
-                    // Update the respective elements
-                    // Update quantity input
-                    $('button[data-uuid="' + uuid + '"]').closest('.quantity').find('input').val(qty);
 
-                    // Update Subtotal
-                    $('#Subtotal').text('₹' + subtotal + '.00');
+$(document).ready(function() {
+    $('.btn-minus').click(function() {
+        var button = $(this);
+        var uuid = button.data('uuid');
+        console.log(uuid);
+        var quantityInput = $('.quantity-input');
+        $.ajax({
+            type:'GET',
+            url: '/decrement_quantity',
+            data:{
+                prod_id : uuid,  
+            },
+            success: function (data) {
+                console.log(data);
+                quantityInput.val(data.qty);
+                $('#totalAmt').text('₹' + data.totalAmt.toFixed(2));
+                $('#Subtotal').text('₹' + data.Subtotal.toFixed(2));
+                $('#finalamount').text('₹' + data.finalAmount.toFixed(2));
+                
+            }
+        })
+        
+    });
+});
 
-                    // Update final amount
-                    $('#finalamount').text('₹' + finalAmount + '.00');
-
-                    // Update total amount for specific product
-                    $('#totalAmt-' + uuid).text('₹' + totalAmt + '.00');
-                },
-                error: function(error) {
-                    console.error('Error:', error);
-                }
-            });
+$(document).ready(function() {
+    $('.remove-item').click(function() {
+        var button = $(this);
+        var uuid = button.data('uuid');  
+        
+        $.ajax({
+            type: 'GET',
+            url: '/remove_to_cart/',
+            data: {
+                prod_id: uuid,
+               
+            },
+            success: function(data) {
+                $('#Subtotal').text('₹' + data.Subtotal.toFixed(2));
+                $('#finalamount').text('₹' + data.finalAmount.toFixed(2));
+                button.closest('tr').remove();
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                console.log('Error:', errorThrown);
+            }
         });
     });
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Find the checkout button element
+    var checkoutButton = document.getElementById('checkoutButton');
+
+    // Attach a click event listener to the checkout button
+    checkoutButton.addEventListener('click', function(event) {
+        // Find the checkbox element
+        var checkbox = document.getElementById('flexCheckDefault');
+
+        // Check if the checkbox is checked
+        if (!checkbox.checked) {
+            // Prevent the default action (following the link)
+            event.preventDefault();
+
+            // Alert the user
+            alert('Please check the Default Address checkbox before proceeding to checkout.');
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    var checkboxes = document.querySelectorAll('#price-1, #price-2, #price-3, #price-4, #price-5');
+
+    checkboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) {
+                // Submit the form automatically
+                document.getElementById('price-filter-form').submit();
+            }
+        });
+    });
+});

@@ -37,35 +37,39 @@ My Cart
                         </tr>
                     </thead>
 
-                    {% for cart in addcat %}
-                    <tbody class="align-middle">
-                        <tr>
-                            <td class="align-middle"><img src="/media/{{cart.product.product_image.first.image}}" alt="" style="width: 50px;"> {{cart.product.product_name}}</td>
-                            <td class="align-middle">₹{{cart.product.product_price}}.00</td>
-                            <td class="align-middle">
-                                <div class="input-group quantity mx-auto" style="width: 100px;">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-primary btn-minus"data-uuid="{{ cart.product.udid }}">
-                                            <i class="fa fa-minus"></i>
-                                        </button>
-                                    </div>
-                                    <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center quantity-input" value="1">
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-primary btn-plus" data-uuid="{{ cart.product.udid}}">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="align-middle" ><span id="totalAmt-{{ cart.product.udid }}">₹{{ cart.totalAmt }}.00</span></td>
-                            <td class="align-middle"><button class="btn btn-sm btn-danger"><i class="fa fa-times"></i></button></td>
-                        </tr>
-                    </tbody>
-                   {% endfor %}
+            {% for cart in addcat %}
+            <tbody class="align-middle">
+                <tr>
+                    <td class="align-middle"><img src="/media/{{ cart.product.product_image.first.image }}" alt="" style="width: 50px;"> {{ cart.product.product_name }}</td>
+                    <td class="align-middle">₹{{ cart.product.product_price }}.00</td>
+                    <td class="align-middle">
+                        <div class="input-group quantity mx-auto" style="width: 100px;">
+                            <div class="input-group-btn">
+                                <button class="btn btn-sm btn-primary btn-minus" data-cart-id="{{ cart.id }}" data-uuid="{{ cart.product.udid }}">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center quantity-input" value="{{ cart.qty }}">
+                            <div class="input-group-btn">
+                                <button class="btn btn-sm btn-primary btn-plus" data-cart-id="{{ cart.id }}" data-uuid="{{ cart.product.udid }}">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="align-middle"><h6><span id="totalAmt">₹{{ totalAmt }}</span></h6>
+                    </td>
+                    <td class="align-middle">
+                        <button class="btn btn-sm btn-danger remove-item" data-uuid="{{ cart.product.udid }}">
+                            <i class="fa fa-times"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+            {% endfor %}
                 </table>  
             </div>
        
-
 
             <div class="col-lg-4">
                 <form class="mb-30" action="">
@@ -91,9 +95,9 @@ My Cart
                     <div class="pt-2">
                         <div class="d-flex justify-content-between mt-2">
                             <h5>Total</h5>
-                            <h5><samp id="finalamount">₹{{finalAmount}}.00 </samp> </h5>
+                            <h5><samp id="finalamount">₹{{ finalAmount }}</samp></h5>
                         </div>
-                        <button class="btn btn-block btn-primary font-weight-bold my-3 py-3">Proceed To Checkout</button>
+                        <a href="{% url 'checkout' %}" class="btn btn-block btn-primary font-weight-bold my-3 py-3">Proceed To Checkout</a>
                     </div>
                 </div>
             </div>

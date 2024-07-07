@@ -43,15 +43,26 @@ class Product(BaseModole):
     product_Brand = models.CharField(max_length=100,blank=True, null=True)
     product_artical = models.CharField(max_length=100 ,blank=True, null=True)
     product_price = models.IntegerField()
+    product_dicount = models.IntegerField( default= 20 )
     product_Size = models.ManyToManyField(Size_variations,blank=True )
     product_color = models.ManyToManyField(color_variations,blank=True,)
     product_decribstion = models.TextField()
 
     def get_slug_source(self):
         return f"{self.product_name}-{self.product_Brand or ''}-{self.product_artical or ''}"
+    
+    @property
+    def discounted_price(self):
+        if self.product_dicount > 0:
+            discount_amount = (self.product_dicount / 100) * self.product_price
+            discounted_price = self.product_price - discount_amount
+            return discounted_price
+        else:
+            return self.product_price
 
     def __str__(self) -> str :
-        return str(self.udid) 
+        return f"{str(self.udid, )}, {(self.product_name)}, {(self.product_Brand), {(self.product_artical)}} "
+
     
   
     
