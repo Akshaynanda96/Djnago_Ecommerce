@@ -11,7 +11,11 @@ def productsdetails(request, sulg):
         category = get_object_or_404(Category, slugField=sulg)
         products = Product.objects.filter(product_category=category)
         subcategories = SubCategory.objects.filter(products__in=products).distinct()
-        cat_count = Carts.objects.filter(user = request.user).count()
+        user = request.user
+        if user.is_authenticated :
+            cat_count = Carts.objects.filter(user).count()
+        else:
+            cat_count = 0
        
         context = {
         'subcat':subcategories,
@@ -29,7 +33,11 @@ def productsdetails(request, sulg):
 
 
 def SubCategory_details(request,sulg):
-    cat_count = Carts.objects.filter(user = request.user).count()
+    user = request.user
+    if user.is_authenticated :
+        cat_count = Carts.objects.filter(user).count()
+    else:
+        cat_count = 0
     subcategory = get_object_or_404(SubCategory, slugField=sulg)
     products = Product.objects.filter(product_subcategory=subcategory)
      
@@ -46,7 +54,11 @@ def SubCategory_details(request,sulg):
 def itemdetails(request , sulg):
     
     
-    cat_count = Carts.objects.filter(user = request.user).count()
+    user = request.user
+    if user.is_authenticated :
+        cat_count = Carts.objects.filter(user).count()
+    else:
+        cat_count = 0
     data = get_object_or_404(Product, slugField=sulg)
     item_in_cart = False
     if request.user.is_authenticated:
@@ -64,7 +76,11 @@ def itemdetails(request , sulg):
 
 def shop( request):
     products = Product.objects.all()
-    cat_count = Carts.objects.filter(user = request.user).count()
+    user = request.user
+    if user.is_authenticated :
+        cat_count = Carts.objects.filter(user).count()
+    else:
+        cat_count = 0
 
     
     context = {
