@@ -2,6 +2,8 @@ from pathlib import Path
 from decouple import config , Csv
 
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -11,11 +13,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-_^sspke+aiz4gjo7ckw!*v8^pft^)*6d@+2tnlk@tw0514huan'
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+
+DEBUG = True
+    
+ALLOWED_HOSTS = ['vercel.app', '.now.sh', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -70,10 +73,21 @@ WSGI_APPLICATION = 'Ecommerce.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': 'nCrSmZhNjppBErjiWavPUTSLiOQmJOxZ',
+        'HOST': 'roundhouse.proxy.rlwy.net',  # Or your PostgreSQL server IP
+        'PORT': '36021',       # Default PostgreSQL port
     }
 }
 
@@ -115,10 +129,11 @@ USE_TZ = True
 
 import os
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR , "staticfiles")
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR / "static"),
 ]
+STATIC_ROOT = os.path.join(BASE_DIR , "staticfiles", 'static')
+
 MEDIA_ROOT =  'media/'
 MEDIA_URL = '/media/'
 
