@@ -1,10 +1,10 @@
 echo "BUILD START"
-python -m pip install Django
-python -m pip install virtualenv
-python -m venv my_env
+python3.12 -m pip install Django
+python3.12 -m pip install virtualenv
+python3.12 -m venv my_env
 source  my_env/Scripts/activate
 cd Ecommerce
-python -m pip install -r requirements.txt
-python manage.py collectstatic --noinput
+python3.12 -m pip install -r requirements.txt
+python3.12 manage.py collectstatic --noinput
 echo "BUILD END"
 
