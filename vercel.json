@@ -23,8 +23,5 @@
       "src": "/(.*)",
       "dest": "Ecommerce/wsgi.py"
     }
-  ],
-  "env": {
-  "PYTHONPATH": "$PYTHONPATH:$BUILD_DIR/Ecommerce"
-}
+  ]
 }
